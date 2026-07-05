@@ -1,8 +1,5 @@
 const crypto = require("crypto");
-const { getStore } = require("@netlify/blobs");
-
-const STORE_NAME = "trade-legacy-box";
-const SUBMISSIONS_KEY = "submissions.json";
+const { neon } = require("@netlify/neon");
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -34,16 +31,56 @@ exports.handler = async (event) => {
   };
 
   try {
-    const store = getStore(STORE_NAME);
-    const existing = await store.get(SUBMISSIONS_KEY, { type: "json" }).catch(() => []);
-    const submissions = Array.isArray(existing) ? existing : [];
-    await store.setJSON(SUBMISSIONS_KEY, [submission, ...submissions]);
+    const sql = neon();
+    await ensureSchema(sql);
+    await sql`
+      insert into submissions (
+        id,
+        question_id,
+        question_text,
+        answer_text,
+        trade,
+        years_experience,
+        display_name,
+        anonymous,
+        created_at,
+        user_cookie_id
+      ) values (
+        ${submission.id},
+        ${submission.question_id},
+        ${submission.question_text},
+        ${submission.answer_text},
+        ${submission.trade},
+        ${submission.years_experience},
+        ${submission.display_name},
+        ${submission.anonymous},
+        ${submission.created_at},
+        ${submission.user_cookie_id}
+      )
+    `;
     return json(201, { ok: true });
   } catch (error) {
     console.error(error);
-    return json(500, { error: "Storage failed", detail: error.message });
+    return json(500, { error: "Database save failed", detail: error.message });
   }
 };
+
+async function ensureSchema(sql) {
+  await sql`
+    create table if not exists submissions (
+      id text primary key,
+      question_id text,
+      question_text text,
+      answer_text text not null,
+      trade text,
+      years_experience text,
+      display_name text,
+      anonymous boolean not null default true,
+      created_at timestamptz not null default now(),
+      user_cookie_id text
+    )
+  `;
+}
 
 function clean(value) {
   return String(value || "").trim();

@@ -4,7 +4,7 @@ A small public story intake page for preserving short trade lessons before they 
 
 ## Deploy
 
-This version is built for Netlify with Netlify Functions and Netlify Blobs.
+This version is built for Netlify with Netlify Functions and Netlify Database.
 
 - Branch: `main`
 - Build command: leave blank
@@ -15,13 +15,15 @@ Set this environment variable in Netlify:
 
 `BALLOT_BOX_ADMIN_PASSWORD`
 
+Netlify Database must be enabled/provisioned for the site so the functions can connect through `@netlify/neon`.
+
 ## Data Behavior
 
 - The public page shows one rotating question.
 - Each browser tracks answered questions locally with `localStorage`.
 - Public visitors can submit a story without login.
 - Submissions are sent to `/.netlify/functions/submit`.
-- Submissions are stored in Netlify Blobs.
+- Submissions are inserted as one row per story in Netlify Database.
 - CSV export is available through the protected export function.
 
 ## Admin Review

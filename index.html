@@ -62,15 +62,12 @@
         </div>
 
         <div class="story-layout">
-          <form class="story-form" id="submission-form" name="trade-legacy-stories" method="POST" action="/success.html" data-netlify="true" netlify netlify-honeypot="bot-field">
+          <form class="story-form" id="submission-form">
             <input type="hidden" name="form-name" value="trade-legacy-stories" />
             <input type="hidden" id="question-id" name="question_id" />
             <input type="hidden" id="question-hidden-text" name="question_text" />
             <input type="hidden" id="submitted-at" name="submitted_at" />
             <input type="hidden" id="user-id" name="user_id" />
-            <p class="hidden-field">
-              <label>Do not fill this out if you are human: <input name="bot-field" /></label>
-            </p>
             <div id="question-panel">
               <p class="question-count" id="question-count"></p>
               <h3 id="question-text">Loading question...</h3>
