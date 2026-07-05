@@ -148,6 +148,18 @@ function saveSubmission(submission) {
   store.set(STORAGE_KEYS.answered, [...new Set([...answered, submission.question_id])]);
 }
 
+async function sendSubmission(submission) {
+  const response = await fetch("/.netlify/functions/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(submission)
+  });
+
+  if (!response.ok) {
+    throw new Error("Submission could not be saved.");
+  }
+}
+
 function renderQuestion() {
   const form = document.querySelector("#submission-form");
   const thanks = document.querySelector("#thanks-panel");
@@ -216,7 +228,8 @@ function wireLandingPage() {
   const form = document.querySelector("#submission-form");
   if (!form) return;
 
-  form.addEventListener("submit", () => {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
     const question = window.currentFieldKnowledgeQuestion;
     if (!question) return;
 
@@ -245,7 +258,14 @@ function wireLandingPage() {
       user_cookie_id: localStorage.getItem(STORAGE_KEYS.userId)
     };
 
-    saveSubmission(submission);
+    try {
+      await sendSubmission(submission);
+      saveSubmission(submission);
+      window.location.href = "/success.html";
+    } catch (error) {
+      console.error(error);
+      alert("That did not save. Please try again.");
+    }
   });
 
   document.querySelector("#answer-another")?.addEventListener("click", renderQuestion);
