@@ -11,20 +11,6 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <form name="trade-legacy-stories" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
-      <input type="hidden" name="form-name" value="trade-legacy-stories" />
-      <input name="question_id" />
-      <input name="question_text" />
-      <textarea name="answer_text"></textarea>
-      <input name="trade" />
-      <input name="years_experience" />
-      <input name="display_name" />
-      <input name="anonymous" />
-      <input name="submitted_at" />
-      <input name="user_id" />
-      <input name="bot-field" />
-    </form>
-
     <header class="site-header">
       <a class="brand" href="#top" aria-label="Trade Legacy Box home">
         <span class="brand-mark"></span>
@@ -76,7 +62,7 @@
         </div>
 
         <div class="story-layout">
-          <form class="story-form" id="submission-form" name="trade-legacy-stories" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <form class="story-form" id="submission-form" name="trade-legacy-stories" method="POST" action="/success.html" data-netlify="true" netlify netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="trade-legacy-stories" />
             <input type="hidden" id="question-id" name="question_id" />
             <input type="hidden" id="question-hidden-text" name="question_text" />

@@ -148,31 +148,6 @@ function saveSubmission(submission) {
   store.set(STORAGE_KEYS.answered, [...new Set([...answered, submission.question_id])]);
 }
 
-async function sendSubmission(submission) {
-  const body = new URLSearchParams({
-    "form-name": "trade-legacy-stories",
-    question_id: submission.question_id,
-    question_text: submission.question_text,
-    answer_text: submission.answer_text,
-    trade: submission.trade,
-    years_experience: submission.years_experience,
-    display_name: submission.display_name,
-    anonymous: submission.anonymous ? "yes" : "no",
-    submitted_at: submission.created_at,
-    user_id: submission.user_cookie_id
-  });
-
-  const response = await fetch("/", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body
-  });
-
-  if (!response.ok) {
-    throw new Error("Submission could not be saved.");
-  }
-}
-
 function renderQuestion() {
   const form = document.querySelector("#submission-form");
   const thanks = document.querySelector("#thanks-panel");
@@ -241,8 +216,7 @@ function wireLandingPage() {
   const form = document.querySelector("#submission-form");
   if (!form) return;
 
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
+  form.addEventListener("submit", () => {
     const question = window.currentFieldKnowledgeQuestion;
     if (!question) return;
 
@@ -271,22 +245,7 @@ function wireLandingPage() {
       user_cookie_id: localStorage.getItem(STORAGE_KEYS.userId)
     };
 
-    try {
-      await sendSubmission(submission);
-    } catch (error) {
-      console.error(error);
-      alert("That did not save. Please try again.");
-      return;
-    }
-
     saveSubmission(submission);
-
-    form.reset();
-    document.querySelector("#anonymous").checked = true;
-    document.querySelector("#thanks-message").textContent = getRandomThankYou();
-    form.hidden = true;
-    document.querySelector("#thanks-panel").hidden = false;
-    renderSavedPreview();
   });
 
   document.querySelector("#answer-another")?.addEventListener("click", renderQuestion);
