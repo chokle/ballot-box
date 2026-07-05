@@ -1,4 +1,7 @@
-const { neon } = require("@netlify/neon");
+const { Pool } = require("pg");
+
+const connectionString = process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL;
+const pool = connectionString ? new Pool({ connectionString }) : null;
 
 exports.handler = async (event) => {
   const expectedPassword = process.env.BALLOT_BOX_ADMIN_PASSWORD;
@@ -13,9 +16,16 @@ exports.handler = async (event) => {
   }
 
   try {
-    const sql = neon();
-    await ensureSchema(sql);
-    const rows = await sql`
+    if (!pool) {
+      return {
+        statusCode: 500,
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+        body: "Database connection is not configured."
+      };
+    }
+
+    await ensureSchema();
+    const result = await pool.query(`
       select
         id,
         question_id,
@@ -29,7 +39,8 @@ exports.handler = async (event) => {
         user_cookie_id
       from submissions
       order by created_at desc
-    `;
+    `);
+    const rows = result.rows;
 
     return {
       statusCode: 200,
@@ -49,8 +60,8 @@ exports.handler = async (event) => {
   }
 };
 
-async function ensureSchema(sql) {
-  await sql`
+async function ensureSchema() {
+  await pool.query(`
     create table if not exists submissions (
       id text primary key,
       question_id text,
@@ -63,7 +74,7 @@ async function ensureSchema(sql) {
       created_at timestamptz not null default now(),
       user_cookie_id text
     )
-  `;
+  `);
 }
 
 function toCsv(rows) {

@@ -1,5 +1,8 @@
 const crypto = require("crypto");
-const { neon } = require("@netlify/neon");
+const { Pool } = require("pg");
+
+const connectionString = process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL;
+const pool = connectionString ? new Pool({ connectionString }) : null;
 
 exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
@@ -31,33 +34,39 @@ exports.handler = async (event) => {
   };
 
   try {
-    const sql = neon();
-    await ensureSchema(sql);
-    await sql`
-      insert into submissions (
-        id,
-        question_id,
-        question_text,
-        answer_text,
-        trade,
-        years_experience,
-        display_name,
-        anonymous,
-        created_at,
-        user_cookie_id
-      ) values (
-        ${submission.id},
-        ${submission.question_id},
-        ${submission.question_text},
-        ${submission.answer_text},
-        ${submission.trade},
-        ${submission.years_experience},
-        ${submission.display_name},
-        ${submission.anonymous},
-        ${submission.created_at},
-        ${submission.user_cookie_id}
-      )
-    `;
+    if (!pool) {
+      return json(500, { error: "Database connection is not configured." });
+    }
+
+    await ensureSchema();
+    await pool.query(
+      `
+        insert into submissions (
+          id,
+          question_id,
+          question_text,
+          answer_text,
+          trade,
+          years_experience,
+          display_name,
+          anonymous,
+          created_at,
+          user_cookie_id
+        ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      `,
+      [
+        submission.id,
+        submission.question_id,
+        submission.question_text,
+        submission.answer_text,
+        submission.trade,
+        submission.years_experience,
+        submission.display_name,
+        submission.anonymous,
+        submission.created_at,
+        submission.user_cookie_id
+      ]
+    );
     return json(201, { ok: true });
   } catch (error) {
     console.error(error);
@@ -65,8 +74,8 @@ exports.handler = async (event) => {
   }
 };
 
-async function ensureSchema(sql) {
-  await sql`
+async function ensureSchema() {
+  await pool.query(`
     create table if not exists submissions (
       id text primary key,
       question_id text,
@@ -79,7 +88,7 @@ async function ensureSchema(sql) {
       created_at timestamptz not null default now(),
       user_cookie_id text
     )
-  `;
+  `);
 }
 
 function clean(value) {
