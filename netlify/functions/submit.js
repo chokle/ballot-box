@@ -1,5 +1,5 @@
-const { getStore } = require("@netlify/blobs");
 const crypto = require("crypto");
+const { getStore } = require("@netlify/blobs");
 
 const STORE_NAME = "trade-legacy-box";
 const SUBMISSIONS_KEY = "submissions.json";
@@ -33,12 +33,16 @@ exports.handler = async (event) => {
     user_cookie_id: clean(body.user_cookie_id)
   };
 
-  const store = getStore(STORE_NAME);
-  const existing = await store.get(SUBMISSIONS_KEY, { type: "json" }).catch(() => []);
-  const submissions = Array.isArray(existing) ? existing : [];
-  await store.setJSON(SUBMISSIONS_KEY, [submission, ...submissions]);
-
-  return json(201, { ok: true });
+  try {
+    const store = getStore(STORE_NAME);
+    const existing = await store.get(SUBMISSIONS_KEY, { type: "json" }).catch(() => []);
+    const submissions = Array.isArray(existing) ? existing : [];
+    await store.setJSON(SUBMISSIONS_KEY, [submission, ...submissions]);
+    return json(201, { ok: true });
+  } catch (error) {
+    console.error(error);
+    return json(500, { error: "Storage failed", detail: error.message });
+  }
 };
 
 function clean(value) {

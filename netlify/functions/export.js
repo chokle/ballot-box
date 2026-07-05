@@ -15,9 +15,19 @@ exports.handler = async (event) => {
     };
   }
 
-  const store = getStore(STORE_NAME);
-  const rows = await store.get(SUBMISSIONS_KEY, { type: "json" }).catch(() => []);
-  const csv = toCsv(Array.isArray(rows) ? rows : []);
+  let csv;
+  try {
+    const store = getStore(STORE_NAME);
+    const rows = await store.get(SUBMISSIONS_KEY, { type: "json" }).catch(() => []);
+    csv = toCsv(Array.isArray(rows) ? rows : []);
+  } catch (error) {
+    console.error(error);
+    return {
+      statusCode: 500,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+      body: `Storage failed: ${error.message}`
+    };
+  }
 
   return {
     statusCode: 200,
