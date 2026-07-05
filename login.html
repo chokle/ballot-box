@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./index.html">
+        <span class="brand-mark"></span>
+        <span>Trade Legacy Box</span>
+      </a>
+      <nav>
+        <a href="./index.html">Public Page</a>
+      </nav>
+    </header>
+
+    <main class="admin-shell">
+      <section class="admin-hero">
+        <p class="eyebrow">Admin only</p>
+        <h1>Sign in to review stories.</h1>
+      </section>
+
+      <section class="admin-grid single">
+        <form class="admin-panel compact-form" id="login-form">
+          <label>
+            <span>Admin password</span>
+            <input id="admin-password" type="password" autocomplete="current-password" required />
+          </label>
+          <button class="button primary full" type="submit">Sign In</button>
+          <p class="form-note" id="login-error" hidden>Unauthorized. Check the password and try again.</p>
+        </form>
+      </section>
+    </main>
+
+    <script src="./login.js"></script>
+  </body>
+</html>

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trade Legacy Box</title>
+    <meta
+      name="description"
+      content="Leave a field story for the next generation of trades workers."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Trade Legacy Box home">
+        <span class="brand-mark"></span>
+        <span>Trade Legacy Box</span>
+      </a>
+      <nav>
+        <a href="#story-form">Answer</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">For the people who built the work</p>
+          <h1>Roughly 300,000 skilled workers are retiring by 2030.</h1>
+          <p class="subheadline">
+            Not enough boots are ready to fill the gap. If you have spent years
+            learning the trade the hard way, leave one story, lesson, or warning
+            for the next person coming up behind you.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#story-form">Share Your Experience</a>
+            <a class="button secondary" href="#story-form">See Today’s Question</a>
+          </div>
+        </div>
+
+        <div class="box-stage" aria-hidden="true">
+          <div class="story-card" id="animated-card">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="steel-box">
+            <div class="box-lid">
+              <div class="slot"></div>
+            </div>
+            <div class="box-face">
+              <div class="torch-plate">FIELD</div>
+              <div class="box-label">KNOWLEDGE</div>
+              <div class="box-rivets"></div>
+            </div>
+          </div>
+          <div class="floor-shadow"></div>
+        </div>
+      </section>
+
+      <section class="story-section" id="story-form">
+        <div class="section-heading">
+          <p class="eyebrow">One story is enough</p>
+          <h2>Are you one of the people walking away with lessons nobody wrote down?</h2>
+        </div>
+
+        <div class="story-layout">
+          <form class="story-form" id="submission-form">
+            <div id="question-panel">
+              <p class="question-count" id="question-count"></p>
+              <h3 id="question-text">Loading question...</h3>
+            </div>
+
+            <label>
+              <span>Your story, lesson, or warning</span>
+              <textarea
+                id="answer-text"
+                rows="8"
+                minlength="8"
+                required
+                placeholder="Say it the way you would say it to someone starting out."
+              ></textarea>
+            </label>
+
+            <div class="field-grid">
+              <label>
+                <span>Trade</span>
+                <input id="trade" type="text" placeholder="Electrician, pipefitter, carpenter..." />
+              </label>
+              <label>
+                <span>Years of experience</span>
+                <input id="years-experience" type="number" min="0" max="80" placeholder="24" />
+              </label>
+            </div>
+
+            <div class="identity-row">
+              <label>
+                <span>First name or leave blank</span>
+                <input id="display-name" type="text" placeholder="Anonymous" />
+              </label>
+              <label class="check-row">
+                <input id="anonymous" type="checkbox" checked />
+                <span>Show as anonymous</span>
+              </label>
+            </div>
+
+            <button class="button primary full" type="submit">Leave It For The Next Crew</button>
+            <p class="form-note">No account. No login. Just leave something useful behind.</p>
+          </form>
+
+          <aside class="thanks-panel" id="thanks-panel" hidden>
+            <p class="eyebrow">Saved</p>
+            <h3 id="thanks-message"></h3>
+            <div class="thanks-actions">
+              <button class="button primary" id="answer-another" type="button">Share Another Lesson</button>
+            </div>
+          </aside>
+
+          <aside class="completion-panel" id="completion-panel" hidden>
+            <p class="eyebrow">Complete</p>
+            <h3>You’ve emptied the box for now.</h3>
+            <p>You’ve answered every available question. Come back soon — new questions are added regularly.</p>
+          </aside>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <span>Trade Legacy Box</span>
+      <span>Stories and lessons for the next generation.</span>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
