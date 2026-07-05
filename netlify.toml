@@ -1,0 +1,17 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/admin.html"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/login.html"
+  to = "/"
+  status = 302
+
+[[redirects]]
+  from = "/api/*"
+  to = "/"
+  status = 302

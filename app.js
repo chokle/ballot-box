@@ -149,10 +149,23 @@ function saveSubmission(submission) {
 }
 
 async function sendSubmission(submission) {
-  const response = await fetch("/api/submissions", {
+  const body = new URLSearchParams({
+    "form-name": "trade-legacy-stories",
+    question_id: submission.question_id,
+    question_text: submission.question_text,
+    answer_text: submission.answer_text,
+    trade: submission.trade,
+    years_experience: submission.years_experience,
+    display_name: submission.display_name,
+    anonymous: submission.anonymous ? "yes" : "no",
+    submitted_at: submission.created_at,
+    user_id: submission.user_cookie_id
+  });
+
+  const response = await fetch("/", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(submission)
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body
   });
 
   if (!response.ok) {
@@ -182,6 +195,9 @@ function renderQuestion() {
   completion.hidden = true;
   questionText.textContent = next.question.question_text;
   questionCount.textContent = `Question ${Math.min(next.answeredCount + 1, next.total)} of ${next.total}`;
+  document.querySelector("#question-id").value = next.question.id;
+  document.querySelector("#question-hidden-text").value = next.question.question_text;
+  document.querySelector("#user-id").value = localStorage.getItem(STORAGE_KEYS.userId);
 }
 
 function renderSavedPreview() {
@@ -239,6 +255,8 @@ function wireLandingPage() {
     card.classList.add("drop");
 
     const anonymous = document.querySelector("#anonymous").checked;
+    const createdAt = new Date().toISOString();
+    document.querySelector("#submitted-at").value = createdAt;
     const submission = {
       id: crypto.randomUUID(),
       question_id: question.id,
@@ -249,7 +267,7 @@ function wireLandingPage() {
       display_name: anonymous ? "" : document.querySelector("#display-name").value.trim(),
       anonymous,
       approved: true,
-      created_at: new Date().toISOString(),
+      created_at: createdAt,
       user_cookie_id: localStorage.getItem(STORAGE_KEYS.userId)
     };
 

@@ -62,7 +62,15 @@
         </div>
 
         <div class="story-layout">
-          <form class="story-form" id="submission-form">
+          <form class="story-form" id="submission-form" name="trade-legacy-stories" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="trade-legacy-stories" />
+            <input type="hidden" id="question-id" name="question_id" />
+            <input type="hidden" id="question-hidden-text" name="question_text" />
+            <input type="hidden" id="submitted-at" name="submitted_at" />
+            <input type="hidden" id="user-id" name="user_id" />
+            <p class="hidden-field">
+              <label>Do not fill this out if you are human: <input name="bot-field" /></label>
+            </p>
             <div id="question-panel">
               <p class="question-count" id="question-count"></p>
               <h3 id="question-text">Loading question...</h3>
@@ -72,6 +80,7 @@
               <span>Your story, lesson, or warning</span>
               <textarea
                 id="answer-text"
+                name="answer_text"
                 rows="8"
                 minlength="8"
                 required
@@ -82,21 +91,21 @@
             <div class="field-grid">
               <label>
                 <span>Trade</span>
-                <input id="trade" type="text" placeholder="Electrician, pipefitter, carpenter..." />
+                <input id="trade" name="trade" type="text" placeholder="Electrician, pipefitter, carpenter..." />
               </label>
               <label>
                 <span>Years of experience</span>
-                <input id="years-experience" type="number" min="0" max="80" placeholder="24" />
+                <input id="years-experience" name="years_experience" type="number" min="0" max="80" placeholder="24" />
               </label>
             </div>
 
             <div class="identity-row">
               <label>
                 <span>First name or leave blank</span>
-                <input id="display-name" type="text" placeholder="Anonymous" />
+                <input id="display-name" name="display_name" type="text" placeholder="Anonymous" />
               </label>
               <label class="check-row">
-                <input id="anonymous" type="checkbox" checked />
+                <input id="anonymous" name="anonymous" type="checkbox" checked />
                 <span>Show as anonymous</span>
               </label>
             </div>

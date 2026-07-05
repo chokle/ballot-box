@@ -1,46 +1,35 @@
 # Trade Legacy Box
 
-A small standalone story box for preserving short trade lessons before they disappear.
+A small public story intake page for preserving short trade lessons before they disappear.
 
-## Run locally
+## Deploy
 
-Run the included server:
+This version is built for Netlify.
 
-```bash
-node server.js
-```
+- Branch: `main`
+- Build command: leave blank
+- Publish directory: `.`
+- Forms directory: handled by Netlify Forms
 
-Then open `http://127.0.0.1:4177/`.
+## Data Behavior
 
-Set an admin password before using this outside a private local test:
+- The public page shows one rotating question.
+- Each browser tracks answered questions locally with `localStorage`.
+- Public visitors can submit a story without login.
+- Submissions are sent to Netlify Forms under `trade-legacy-stories`.
+- Review, search, moderation, and CSV export happen in the private Netlify dashboard.
 
-```bash
-BALLOT_BOX_ADMIN_PASSWORD="use-a-real-password" node server.js
-```
+## Admin Review
 
-## Data behavior
+In Netlify, open the deployed site, then go to:
 
-The MVP stores public submissions in `data/submissions.json` through the local server:
+`Forms` -> `trade-legacy-stories`
 
-- Questions are seeded from a master list.
-- Each browser gets a randomized personal question sequence.
-- Answered question IDs are stored locally and are not shown again.
-- Submissions are posted to `/api/submissions`.
-- Admin review, search, delete, and CSV export require login.
-
-Admin authentication is included. No Torch, Jack, Live Brain, or website integration is required.
-
-## Admin access
-
-- Public users can only view the landing page, answer the prompt, submit, and see the thank-you confirmation.
-- `/admin.html`, `/admin.js`, `/api/admin/submissions`, `/api/admin/export`, and moderation routes require an admin session.
-- Direct admin access redirects to `/login.html`.
-- The default development password is `change-this-password`; override it with `BALLOT_BOX_ADMIN_PASSWORD`.
+From there you can review submissions and export them.
 
 ## Files
 
-- `index.html`: one-question capture flow
-- `app.js`: local question rotation and answered-question tracking
-- `admin.html`: simple review/export page
-- `admin.js`: authenticated saved story review, search, moderation, CSV export
-- `server.js`: public submission API, admin auth, protected admin APIs
+- `index.html`: public intake page and Netlify form
+- `app.js`: question rotation, answered-question tracking, Netlify form submit
+- `styles.css`: page styling
+- `netlify.toml`: publish settings and redirects for removed local admin routes
