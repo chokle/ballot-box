@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ballot-box.netlify.app/sitemap.xml
+
+# Public landing page
+Allow: /$
+Allow: /index.html
+Allow: /success.html
+
+# Keep private or non-public endpoints out of crawl
+Disallow: /.netlify/
+Disallow: /#story-form
