@@ -224,6 +224,71 @@ function escapeHtml(value) {
   }[char]));
 }
 
+function wireVoiceInput() {
+  const button = document.querySelector("#voice-button");
+  const status = document.querySelector("#voice-status");
+  const answer = document.querySelector("#answer-text");
+  if (!button || !status || !answer) return;
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    button.disabled = true;
+    status.textContent = "Voice input is not supported in this browser.";
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = true;
+  recognition.continuous = true;
+
+  let listening = false;
+
+  const setListeningState = (next) => {
+    listening = next;
+    button.classList.toggle("is-recording", next);
+    button.setAttribute("aria-pressed", String(next));
+    button.textContent = next ? "Stop Voice Input" : "Start Voice Input";
+    status.textContent = next ? "Listening. Speak naturally." : "Voice input is off.";
+  };
+
+  button.addEventListener("click", async () => {
+    if (listening) {
+      recognition.stop();
+      setListeningState(false);
+      return;
+    }
+
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      recognition.start();
+      setListeningState(true);
+    } catch (error) {
+      status.textContent = "Microphone access is blocked in this browser.";
+    }
+  });
+
+  recognition.onresult = (event) => {
+    let transcript = "";
+    for (let index = event.resultIndex; index < event.results.length; index += 1) {
+      transcript += event.results[index][0].transcript;
+    }
+    const current = answer.value.trim();
+    answer.value = current ? `${current} ${transcript.trim()}` : transcript.trim();
+  };
+
+  recognition.onerror = (event) => {
+    status.textContent = `Voice input error: ${event.error}`;
+    setListeningState(false);
+  };
+
+  recognition.onend = () => {
+    if (listening) {
+      setListeningState(false);
+    }
+  };
+}
+
 function wireLandingPage() {
   const form = document.querySelector("#submission-form");
   if (!form) return;
@@ -275,6 +340,7 @@ initializeSeeds();
 renderQuestion();
 renderSavedPreview();
 wireLandingPage();
+wireVoiceInput();
 
 window.FieldKnowledgeLogger = {
   STORAGE_KEYS,
