@@ -199,7 +199,7 @@ function renderSavedPreview() {
   }
 
   grid.innerHTML = saved.map((submission) => {
-    const name = submission.anonymous ? "Anonymous" : submission.display_name || "Anonymous";
+    const name = submission.display_name || "Name not listed";
     const years = submission.years_experience ? `${submission.years_experience} years` : "Experience not listed";
     const trade = submission.trade || "Trade not listed";
     const excerpt = submission.answer_text.length > 180
@@ -306,7 +306,9 @@ function wireLandingPage() {
     void card.offsetWidth;
     card.classList.add("drop");
 
-    const anonymous = document.querySelector("#anonymous").checked;
+    const displayName = document.querySelector("#display-name").value.trim();
+    if (!displayName) return;
+
     const createdAt = new Date().toISOString();
     document.querySelector("#submitted-at").value = createdAt;
     const submission = {
@@ -316,8 +318,8 @@ function wireLandingPage() {
       answer_text: answerText,
       trade: document.querySelector("#trade").value.trim(),
       years_experience: document.querySelector("#years-experience").value.trim(),
-      display_name: anonymous ? "" : document.querySelector("#display-name").value.trim(),
-      anonymous,
+      display_name: displayName,
+      anonymous: false,
       approved: true,
       created_at: createdAt,
       user_cookie_id: localStorage.getItem(STORAGE_KEYS.userId)

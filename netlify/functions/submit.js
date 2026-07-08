@@ -19,6 +19,9 @@ exports.handler = async (event) => {
   if (!body.answer_text || String(body.answer_text).trim().length < 8) {
     return json(400, { error: "Story is required." });
   }
+  if (!body.display_name || String(body.display_name).trim().length < 1) {
+    return json(400, { error: "Name is required." });
+  }
 
   const submission = {
     id: body.id || crypto.randomUUID(),
@@ -28,7 +31,7 @@ exports.handler = async (event) => {
     trade: clean(body.trade),
     years_experience: clean(body.years_experience),
     display_name: clean(body.display_name),
-    anonymous: Boolean(body.anonymous),
+    anonymous: false,
     created_at: body.created_at || new Date().toISOString(),
     user_cookie_id: clean(body.user_cookie_id)
   };
